@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -79,15 +80,14 @@ namespace PageFilpApp
                 var regionalNetworkUrl = Application.StartupPath + "\\index.html";
 
                 Browser = new ExtChromiumBrowser(regionalNetworkUrl)
-                          {
-                              Dock = DockStyle.Fill //填充方式
-                          };
+                {
+                    Dock = DockStyle.Fill //填充方式
+                };
                 Browser.StartNewWindow += Browser_StartNewWindow;
                 Browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged; //添加事件
+                Browser.MenuHandler = new MenuHandler();
                 panel1.Controls.Clear();
                 panel1.Controls.Add(Browser);
-                panel1.BringToFront();
-
             }
             catch (Exception) { }
         }
@@ -122,6 +122,15 @@ namespace PageFilpApp
 
         #endregion
         private void label1_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel2_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
