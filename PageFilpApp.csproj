@@ -81,7 +81,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tools\MenuHandler.cs" />
+    <Compile Include="Tools\ActionEventArgs.cs" />
     <Compile Include="Tools\NewWindowEventArgs.cs" />
+    <Compile Include="Util\Logs.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

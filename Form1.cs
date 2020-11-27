@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CefSharp;
 using PageFilpApp.Tools;
+using PageFilpApp.Util;
 
 namespace PageFilpApp
 {
@@ -85,11 +86,32 @@ namespace PageFilpApp
                 };
                 Browser.StartNewWindow += Browser_StartNewWindow;
                 Browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged; //添加事件
+                Browser.NewAction += Browser_NewAction;
                 Browser.MenuHandler = new MenuHandler();
                 panel1.Controls.Clear();
                 panel1.Controls.Add(Browser);
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logs.Save(ex); }
+        }
+
+        public delegate void BrowserActionDelegate();
+
+        
+
+        private void Browser_NewAction(object sender, ActionEventArgs e)
+        {
+            if (e.Command == 1)
+            {
+                if(InvokeRequired)
+                {
+                    var action = new BrowserActionDelegate(() => { Browser.Reload(); });
+                    Invoke(action);
+                }
+                else
+                {
+                    Browser.Reload();
+                }
+            }
         }
 
 
@@ -117,22 +139,12 @@ namespace PageFilpApp
         private void OnIsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs args)
         {
             try { }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                Logs.Save(ex);
+            }
         }
 
         #endregion
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panel2_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
     }
 }

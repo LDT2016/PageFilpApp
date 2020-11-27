@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CefSharp;
+using CefSharp.WinForms;
 
 namespace PageFilpApp.Tools
 {
@@ -41,6 +42,7 @@ namespace PageFilpApp.Tools
             //model.AddItem((CefMenuCommand)26502, "Close DevTools");
             model.Clear();
             model.AddItem((CefMenuCommand)26501, "退出");
+            model.AddItem((CefMenuCommand)26502, "回到首页");
         }
 
         bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -50,6 +52,14 @@ namespace PageFilpApp.Tools
             {
                 Application.Exit();
 
+                //browser.GetHost().ShowDevTools();
+                //return true;
+            }
+            else if (commandId == (CefMenuCommand)26502)
+            {
+                var webBrowser = (ExtChromiumBrowser)browserControl;
+
+                webBrowser.OnNewAction(new ActionEventArgs(1));
                 //browser.GetHost().ShowDevTools();
                 //return true;
             }

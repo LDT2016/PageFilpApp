@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PageFilpApp
@@ -13,9 +14,28 @@ namespace PageFilpApp
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
+            var appEvents = new ApplicationEventHandlerClass();
+            Application.ThreadException += appEvents.OnThreadException; Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.DoEvents();
             Application.Run(Form1.Instance);
         }
+
+        #region nested types
+
+        // 全局异常处理
+        public class ApplicationEventHandlerClass
+        {
+            #region methods
+
+            public void OnThreadException(object sender, ThreadExceptionEventArgs e)
+            {
+                MessageBox.Show(e.Exception.Message);
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
 }

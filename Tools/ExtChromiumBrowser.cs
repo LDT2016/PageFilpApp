@@ -11,10 +11,15 @@ namespace PageFilpApp.Tools
         }
 
         public event EventHandler<NewWindowEventArgs> StartNewWindow;
+        public event EventHandler<ActionEventArgs> NewAction;
 
         public void OnNewWindow(NewWindowEventArgs e)
         {
             StartNewWindow?.Invoke(this, e);
+        }
+        public void OnNewAction(ActionEventArgs e)
+        {
+            NewAction?.Invoke(this, e);
         }
     }
 }
