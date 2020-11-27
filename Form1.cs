@@ -136,7 +136,7 @@ namespace PageFilpApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnIsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs args)
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs args)
         {
             try { }
             catch (Exception ex)
