@@ -1,20 +1,26 @@
 ﻿using System;
-using CefSharp;
 
 namespace PageFilpApp.Tools
 {
     public class ActionEventArgs : EventArgs
     {
-        private int _command;
+        #region fields
+
+        #endregion
+
+        #region constructors
+
         public ActionEventArgs(int command)
         {
-            _command = command;
+            Command = command;
         }
 
-        public int Command
-        {
-            get => _command;
-            set => _command = value;
-        }
+        #endregion
+
+        #region properties
+
+        public int Command { get; set; }
+
+        #endregion
     }
 }

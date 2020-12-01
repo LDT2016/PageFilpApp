@@ -5,26 +5,32 @@ namespace PageFilpApp.Tools
 {
     public class NewWindowEventArgs : EventArgs
     {
-        private IWindowInfo _windowInfo;
-        public IWindowInfo WindowInfo
-        {
-            get
-            {
-                return _windowInfo;
-            }
-            set
-            {
-                value = _windowInfo;
-            }
-        }
-        public string url
-        {
-            get; set;
-        }
+        #region fields
+
+        private readonly IWindowInfo _windowInfo;
+
+        #endregion
+
+        #region constructors
+
         public NewWindowEventArgs(IWindowInfo windowInfo, string url)
         {
             _windowInfo = windowInfo;
             this.url = url;
         }
+
+        #endregion
+
+        #region properties
+
+        public string url { get; set; }
+
+        public IWindowInfo WindowInfo
+        {
+            get => _windowInfo;
+            set => value = _windowInfo;
+        }
+
+        #endregion
     }
 }

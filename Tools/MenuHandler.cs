@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CefSharp;
-using CefSharp.WinForms;
 
 namespace PageFilpApp.Tools
 {
@@ -60,6 +59,7 @@ namespace PageFilpApp.Tools
                 var webBrowser = (ExtChromiumBrowser)browserControl;
 
                 webBrowser.OnNewAction(new ActionEventArgs(1));
+
                 //browser.GetHost().ShowDevTools();
                 //return true;
             }

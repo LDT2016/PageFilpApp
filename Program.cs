@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -8,18 +6,23 @@ namespace PageFilpApp
 {
     static class Program
     {
+        #region methods
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             var appEvents = new ApplicationEventHandlerClass();
-            Application.ThreadException += appEvents.OnThreadException; Application.EnableVisualStyles();
+            Application.ThreadException += appEvents.OnThreadException;
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.DoEvents();
             Application.Run(Form1.Instance);
         }
+
+        #endregion
 
         #region nested types
 
