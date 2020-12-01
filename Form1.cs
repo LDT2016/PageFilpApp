@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,11 +11,17 @@ namespace PageFilpApp
 {
     public partial class Form1 : Form
     {
+        #region delegates
+
+        public delegate void BrowserActionDelegate();
+
+        #endregion
+
         #region fields
 
-        private static Form1 instance;
-        private ExtChromiumBrowser Browser;
-        private readonly string ImagePath = ConfigurationManager.AppSettings["ImagePath"];
+        private static Form1 _instance;
+        private readonly string _imagePath = ConfigurationManager.AppSettings["ImagePath"];
+        private ExtChromiumBrowser _browser;
 
         #endregion
 
@@ -35,12 +40,13 @@ namespace PageFilpApp
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new Form1();
+                    _instance = new Form1();
+                    _instance.NetInnerSetup();
                 }
 
-                return instance;
+                return _instance;
             }
         }
 
@@ -52,7 +58,7 @@ namespace PageFilpApp
         {
             try
             {
-                var imagePath = $"{Application.StartupPath}\\{ImagePath.TrimStart(@"\".ToCharArray())}";
+                var imagePath = $"{Application.StartupPath}\\{_imagePath.TrimStart(@"\".ToCharArray())}";
                 var allImages = new DirectoryInfo(imagePath).GetFiles();
 
                 var imageFileName = allImages.Select(x => x.Name)
@@ -65,7 +71,7 @@ namespace PageFilpApp
                                                       })
                                              .ToList();
 
-                var imageDataJson = $"var imagesData = [{string.Join(",", imageFileName.Select(x => $"\"./{ImagePath.TrimStart(@"/".ToCharArray()).TrimEnd(@"/".ToCharArray()).Replace("\\", "/")}/{x}\""))}];";
+                var imageDataJson = $"var imagesData = [{string.Join(",", imageFileName.Select(x => $"\"./{_imagePath.TrimStart(@"/".ToCharArray()).TrimEnd(@"/".ToCharArray()).Replace("\\", "/")}/{x}\""))}];";
                 var imageJsPath = Application.StartupPath + "\\images.js";
 
                 if (File.Exists(imageJsPath))
@@ -80,71 +86,65 @@ namespace PageFilpApp
 
                 var regionalNetworkUrl = Application.StartupPath + "\\index.html";
 
-                Browser = new ExtChromiumBrowser(regionalNetworkUrl)
-                {
-                    Dock = DockStyle.Fill //填充方式
-                };
-                Browser.StartNewWindow += Browser_StartNewWindow;
-                Browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged; //添加事件
-                Browser.NewAction += Browser_NewAction;
-                Browser.MenuHandler = new MenuHandler();
+                _browser = new ExtChromiumBrowser(regionalNetworkUrl)
+                           {
+                               Dock = DockStyle.Fill //填充方式
+                           };
+
+                //_browser.StartNewWindow += Browser_StartNewWindow;
+                //_browser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged; //添加事件
+                _browser.NewAction += Browser_NewAction;
+                _browser.MenuHandler = new MenuHandler();
                 panel1.Controls.Clear();
-                panel1.Controls.Add(Browser);
+                panel1.Controls.Add(_browser);
             }
-            catch (Exception ex) { Logs.Save(ex); }
-        }
-
-        public delegate void BrowserActionDelegate();
-
-        
-
-        private void Browser_NewAction(object sender, ActionEventArgs e)
-        {
-            if (e.Command == 1)
-            {
-                if(InvokeRequired)
-                {
-                    var action = new BrowserActionDelegate(() => { Browser.Reload(); });
-                    Invoke(action);
-                }
-                else
-                {
-                    Browser.Reload();
-                }
-            }
-        }
-
-
-        private void Browser_StartNewWindow(object sender, NewWindowEventArgs e)
-        {
-            //Browser = new ExtChromiumBrowser(e.url)
-            //          {
-            //              Dock = DockStyle.Fill //填充方式
-            //          };
-            //Browser.StartNewWindow += Browser_StartNewWindow;
-            //panel1.Controls.Add(Browser);
-            //panel1.BringToFront();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            NetInnerSetup();
-        }
-
-        /// <summary>
-        /// 开启调试
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnIsBrowserInitializedChanged(object sender, EventArgs args)
-        {
-            try { }
             catch (Exception ex)
             {
                 Logs.Save(ex);
             }
         }
 
+        private void Browser_NewAction(object sender, ActionEventArgs e)
+        {
+            if (e.Command == 1)
+            {
+                if (InvokeRequired)
+                {
+                    var action = new BrowserActionDelegate(() => { _browser.Reload(); });
+                    Invoke(action);
+                }
+                else
+                {
+                    _browser.Reload();
+                }
+            }
+        }
+
         #endregion
+
+        //private void Browser_StartNewWindow(object sender, NewWindowEventArgs e)
+        //{
+        //    //Browser = new ExtChromiumBrowser(e.url)
+        //    //          {
+        //    //              Dock = DockStyle.Fill //填充方式
+        //    //          };
+        //    //Browser.StartNewWindow += Browser_StartNewWindow;
+        //    //panel1.Controls.Add(Browser);
+        //    //panel1.BringToFront();
+        //}
+
+        ///// <summary>
+        ///// 开启调试
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="args"></param>
+        //private void OnIsBrowserInitializedChanged(object sender, EventArgs args)
+        //{
+        //    try { }
+        //    catch (Exception ex)
+        //    {
+        //        Logs.Save(ex);
+        //    }
+        //}
     }
 }
